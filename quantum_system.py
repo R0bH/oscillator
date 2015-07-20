@@ -49,14 +49,13 @@ class path_integral_system:
 
         # calculate energy of ring
         osc = 0.
+        osc1 = 0.
         for i in range(self.beads):
             if i == self.beads-1:
-                for j in range( len(self.ring_system[0].get_config())):
-                    osc += (self.ring_system[i].get_config_element(j) - self.ring_system[0].get_config_element(j))**2
+                osc += sum((self.ring_system[i].get_config() - self.ring_system[0].get_config())**2)
             else: 
-                for j in range( len(self.ring_system[0].get_config())):
-                    osc += (self.ring_system[i].get_config_element(j) - self.ring_system[i+1].get_config_element(j))**2
-        return pot/self.beads + osc
+                osc += sum((self.ring_system[i].get_config() - self.ring_system[i+1].get_config())**2)
+        return pot/self.beads + 0.5*osc*self.beads
 
     def get_potential_energy(self):
         """
@@ -80,10 +79,8 @@ class path_integral_system:
         osc = 0.
         for i in range(self.beads):
             if i == self.beads-1:
-                for j in range( len(self.ring_system[0].get_config())):
-                    osc += (self.ring_system[i].get_config_element(j) - self.ring_system[0].get_config_element(j))**2
+                osc += sum((self.ring_system[i].get_config() - self.ring_system[0].get_config())**2)
             else: 
-                for j in range( len(self.ring_system[0].get_config())):
-                    osc += (self.ring_system[i].get_config_element(j) - self.ring_system[i+1].get_config_element(j))**2
-        return osc
+                osc += sum((self.ring_system[i].get_config() - self.ring_system[i+1].get_config())**2)
+        return 0.5*osc.self.beads
 
