@@ -10,6 +10,6 @@ for i in range(5):
     print test.ring_system[i].harmonic_oscillators
 print  test.get_energy()
 
-wang_landau = wang_landau(hs)
+wang_landau = wang_landau(test, dimensions_=2)
 wang_landau.wl_monte_carlo(100)
 #min_method.min_(10000000)

@@ -82,5 +82,8 @@ class path_integral_system:
                 osc += sum((self.ring_system[i].get_config() - self.ring_system[0].get_config())**2)
             else: 
                 osc += sum((self.ring_system[i].get_config() - self.ring_system[i+1].get_config())**2)
-        return 0.5*osc.self.beads
-
+        return 0.5*osc*self.beads
+    
+    # Alias methods for PIWL
+    get_energy1 = get_potential_energy
+    get_energy2 = get_oscillator_energy
