@@ -10,8 +10,8 @@ class oscillator_system:
     def __init__(self, number_ = None,\
             k_constant_ = None, x_range_ = None):
         if x_range_ == None:
-            print "Range not defined assumin +/- 0.5"
-            self.x_range = 1.
+            print "Range not defined assumin +/- 1."
+            self.x_range = 2.
         else:
             self.x_range = x_range_
 
