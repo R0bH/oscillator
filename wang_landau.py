@@ -13,12 +13,19 @@ class wang_landau:
     Wang Landau Class
     """
     def __init__(self, system_ = None, e_min_ = None, e_max_ = None,\
-                 range_ = None, lnf_ = None ):
+                 range_ = None, lnf_ = None, dimensions_ = None ):
 
         if system_ == None:
             print "Please Define System"
         else:
             self.system = system_
+
+        if dimensions_ == None:
+            print "Using one-dimensional energy integral"
+            self.dimension = 1
+        else:
+            self.dimension = dimensions_
+            print "Using "+str(self.dimension)+"-dimensional energy integral"
 
         if e_min_ == None and e_max_ == None:
             print "Using default energy range"
@@ -49,9 +56,10 @@ class wang_landau:
             self.lnf = lnf_
         
         self.wl_its = 500000000
-        self.spacing = (self.e_max - self.e_min)/self.h_range
-        self.histogram = np.zeros(self.h_range)
-        self.dos = np.zeros(self.h_range)
+        if self.dimension == 1: 
+            self.spacing = (self.e_max - self.e_min)/self.h_range
+            self.histogram = np.zeros(self.h_range)
+            self.dos = np.zeros(self.h_range)
 
 
     def check_lnf(self):
@@ -88,8 +96,9 @@ class wang_landau:
                 self.lnf = self.lnf/2.
                 self.histogram = np.zeros(self.h_range)
             else:
-                print "Simulation failed to converge"
+                print "Simulation failed to converge at iteration "+str(i)
                 exit()
+
     def wang_landau_simulation(self):
         """
         Performs a Wang - Landau simulation.
