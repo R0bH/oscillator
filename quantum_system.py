@@ -32,8 +32,10 @@ class path_integral_system:
         self.ring_system = copy.deepcopy(ring_system_)
 
     def generate_config(self):
-        for i in range(self.beads):
-            self.ring_system[i].generate_config()
+        bead_move = int(np.random.random()*self.beads)
+#        for i in range(self.beads):
+#            self.ring_system[i].generate_config()
+        self.ring_system[bead_move].generate_config()
 
     def get_energy(self):
         """

@@ -66,7 +66,7 @@ class wang_landau:
                     and e_min1_ == None and e_max1_ == None:
                 print "Using default energy range"
                 self.e_min = np.array([0.,0.])
-                self.e_max = np.array([1.6,40.])
+                self.e_max = np.array([1.6,30.])
             elif e_min_ == None and e_max_ == None \
                     and e_min1_ == None and e_max1_ == None:
                 print "I'm lazy please define whole range"
@@ -77,7 +77,7 @@ class wang_landau:
                 
             if range_ == None:
                 print "Using default number of histogram bars"
-                self.h_range = 20
+                self.h_range = 100
             else:
                 self.h_range = range_
             self.histogram = np.zeros([self.h_range,self.h_range])
@@ -150,7 +150,6 @@ class wang_landau:
             elast = [self.system.get_energy1(),self.system.get_energy2()]
             old_level = (elast - self.e_min)/self.spacing
             old_level = [int(old_level[0]),int(old_level[1])]
-            print elast, old_level
 
 
     
@@ -206,7 +205,8 @@ class wang_landau:
                     # If the move is rejected revert to original position of atom.
                     self.system.copy_config(copy_system) 
             # Check convergence
-            if (i % 10000 == 0) and i > 0:
+            
+            if (i > 1./np.sqrt(self.lnf)*self.h_range*self.h_range) and (i % 10000 == 0) and i > 0:
                 if check_converge():
                     print "Converged after " + str(i+1)+" iterations."
                     wl_output.write("Converged after " + str(i+1)+" iterations.\n")
@@ -226,10 +226,14 @@ class wang_landau:
                                             '\n')
                     elif self.dimension == 2:
                         write_dos = open(path, 'w')
+                        e_range1 = np.zeros(self.h_range)
+                        e_range2 = np.zeros(self.h_range)
+                        for i in range(self.h_range):
+                            e_range1[i] = self.e_min[0] + i*self.spacing[0]
+                            e_range2[i] = self.e_min[1] + i*self.spacing[1]
                         for i in range(self.h_range):
                             for j in range(self.h_range):
-                                write_dos.write(str(self.dos[i][j]) + "   ")
-                            write_dos.write('\n')
+                                write_dos.write(str(e_range1[i])+"   "+str(e_range2[j])+"   "+str(self.dos[i][j]) + "   \n")
 
                     return True
 
