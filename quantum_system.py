@@ -1,6 +1,6 @@
 import numpy as np
 import copy 
-
+from lammps_commands import array_to_pos
 
 class path_integral_system:
     """
@@ -16,12 +16,13 @@ class path_integral_system:
             print "No system to clone."
             exit()
         else:
+            self.system = system_
             self.beads = beads_
             self.ring_system = []
             for i in range(beads_):
                 #self.ring_system.append(oscillator_system(number_ = len(oscillator_.get_config()), k_constant_ = oscillator_.get_k_constant()))
                 system_.generate_config()
-                clone = copy.deepcopy(system_)
+                clone = system_.get_config()
                 self.ring_system.append(clone)
 
     def get_config(self):
@@ -37,7 +38,9 @@ class path_integral_system:
         bead_move = int(np.random.random()*self.beads)
 #        for i in range(self.beads):
 #            self.ring_system[i].generate_config()
-        self.ring_system[bead_move].generate_config()
+        self.system.copy_config(self.ring_system[bead_move])
+        self.system.generate_config()
+        self.ring_system[bead_move] = self.system.get_config()
 
     def get_energy(self):
         """
@@ -49,16 +52,18 @@ class path_integral_system:
         # Calculate potential of systems
         pot = 0.
         for i in range(self.beads):
-            pot += self.ring_system[i].get_energy()
+            #pot += self.ring_system[i].get_energy()
+            self.system.copy_config(self.ring_system[i])
+            pot += self.system.get_energy()
 
         # calculate energy of ring
         osc = 0.
         osc1 = 0.
         for i in range(self.beads):
             if i == self.beads-1:
-                osc += sum((self.ring_system[i].get_config() - self.ring_system[0].get_config())**2)
+                osc += sum((self.ring_system[i] - self.ring_system[0])**2)
             else: 
-                osc += sum((self.ring_system[i].get_config() - self.ring_system[i+1].get_config())**2)
+                osc += sum((self.ring_system[i] - self.ring_system[i+1])**2)
         return pot/self.beads + 0.5*osc*self.beads
 
     def get_potential_energy(self):
@@ -69,7 +74,9 @@ class path_integral_system:
         # Calculate potential of systems
         pot = 0.
         for i in range(self.beads):
-            pot += self.ring_system[i].get_energy()
+            self.system.copy_config(self.ring_system[i])
+            pot += self.system.get_energy()
+            print pot
 
         return pot/self.beads
 
@@ -83,9 +90,9 @@ class path_integral_system:
         osc = 0.
         for i in range(self.beads):
             if i == self.beads-1:
-                osc += sum((self.ring_system[i].get_config() - self.ring_system[0].get_config())**2)
+                osc += sum((self.ring_system[i] - self.ring_system[0])**2)
             else: 
-                osc += sum((self.ring_system[i].get_config() - self.ring_system[i+1].get_config())**2)
+                osc += sum((self.ring_system[i] - self.ring_system[i+1])**2)
         return 0.5*osc*self.beads
     
     # Alias methods for PIWL

@@ -82,6 +82,7 @@ class wang_landau:
                 self.h_range = range_
             self.histogram = np.zeros([self.h_range,self.h_range])
             self.dos = np.zeros([self.h_range,self.h_range])
+            print self.e_max, self.e_min
             self.spacing = (self.e_max - self.e_min)/self.h_range
 
     def check_lnf(self):
@@ -190,10 +191,14 @@ class wang_landau:
                     self.system.copy_config(copy_system) 
             elif self.dimension == 2:
                 enew = [self.system.get_energy1(),self.system.get_energy2()]
+                print enew, self.e_max, self.e_min
                 level = (elast - self.e_min)/self.spacing
                 level = [int(level[0]),int(level[1])]
-                if enew[0] < self.e_max[0] and enew[1] > self.e_min[0] and \
+                print level
+                print elast
+                if enew[0] < self.e_max[0] and enew[0] > self.e_min[0] and \
                 enew[1] < self.e_max[1] and enew[1] > self.e_min[1]:
+                    print enew, self.e_max, self.e_min
                     if gen_rand() < \
                         np.exp(self.dos[level[0],level[1]]-self.dos[old_level[0],old_level[1]]):
                         # If the move is accepted update stored energy.
