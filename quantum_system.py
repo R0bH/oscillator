@@ -1,7 +1,6 @@
 import numpy as np
 import copy 
 
-from harmonic_oscillators import oscillator_system
 
 class path_integral_system:
     """
@@ -9,18 +8,21 @@ class path_integral_system:
     Defines N systems coupled by harmonic beads
     Mehods are named to allow polymorphism.
     """
-    def __init__(self, beads_ = None, oscillator_ = None):
+    def __init__(self, beads_ = None, system_ = None):
         if beads_ == None:
             print "No beads defined."
             exit()
-        elif oscillator_ == None:
-            print "No oscillator system to clone."
+        elif system_ == None:
+            print "No system to clone."
             exit()
         else:
             self.beads = beads_
             self.ring_system = []
             for i in range(beads_):
-                self.ring_system.append(oscillator_system(number_ = len(oscillator_.get_config()), k_constant_ = oscillator_.get_k_constant()))
+                #self.ring_system.append(oscillator_system(number_ = len(oscillator_.get_config()), k_constant_ = oscillator_.get_k_constant()))
+                system_.generate_config()
+                clone = copy.deepcopy(system_)
+                self.ring_system.append(clone)
 
     def get_config(self):
         return self.ring_system
