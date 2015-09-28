@@ -4,12 +4,13 @@ Lammps MC class
 import os.path 
 from lammps import lammps
 from atom_commands import atoms
+from lammps_commands import get_radius, pos_to_array, array_to_pos
 
 class lammps_system:
     """ A system defined within the Lammps MD program """
 
 
-    def __init__(self, input_file_ = None, verbose_ = True):
+    def __init__(self, input_file_ = None, verbose_ = False):
         if input_file_ == None:
             print "Lammps input file not defined."
             exit()
@@ -29,6 +30,9 @@ class lammps_system:
         self.lmp.command("run 0 post no")
         self.lmp.command("variable e equal pe")
         self.atom_system.positions = self.lmp.extract_atom("x", 3)
+
+        self.radius =  get_radius(self.lmp)/100.
+        print self.radius
     
     
     def get_energy(self):
@@ -39,11 +43,13 @@ class lammps_system:
         return enew
 
     def generate_config(self):
-        self.atom_system.generate_configuration(self.lmp, radius, moves_ = 1)
+        self.atom_system.generate_configuration(self.lmp, self.radius, moves_ = 2)
 
     def get_config(self):
-        config = pos_to_array(self.lmp)
+        return pos_to_array(self.lmp)
+        
 
-    def copy_config(self):
+    def copy_config(self, config):
+        array_to_pos(self.lmp, config)
 
 

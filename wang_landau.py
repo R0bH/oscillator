@@ -155,7 +155,6 @@ class wang_landau:
     
         # Wang-Landau Monte Carlo Algorithm.
         for i in xrange(1, self.wl_its):
-            
             # Store previous system.
             copy_system = copy.deepcopy(self.system.get_config())
             # Generate a new system 
@@ -166,7 +165,14 @@ class wang_landau:
                 enew = self.system.get_energy()
                 level = int((elast - self.e_min)/self.spacing)
                 if enew < self.e_max and enew > self.e_min:
-                    if gen_rand() < \
+                    if(self.dos[level]-self.dos[old_level]) > 0.:
+                        # If the move is accepted update stored energy.
+                        elast = enew
+                        old_level = level
+                        # update acceptance counter
+                        accept += 1
+
+                    elif gen_rand() < \
                         np.exp(self.dos[level]-self.dos[old_level]):
                         # If the move is accepted update stored energy.
                         elast = enew
@@ -206,7 +212,7 @@ class wang_landau:
                     self.system.copy_config(copy_system) 
             # Check convergence
             
-            if (i > 1./np.sqrt(self.lnf)*self.h_range*self.h_range) and (i % 10000 == 0) and i > 0:
+            if (i > 1./np.sqrt(self.lnf)*self.h_range*self.h_range) and (i % 100 == 0) and i > 0:
                 if check_converge():
                     print "Converged after " + str(i+1)+" iterations."
                     wl_output.write("Converged after " + str(i+1)+" iterations.\n")

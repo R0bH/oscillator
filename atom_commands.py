@@ -142,7 +142,7 @@ class atoms:
     
 
     def generate_configuration(self, lmp_, radius_,lower_bound_=float('-inf'),
-                               upper_bound_=float('inf') moves_ = 1000):
+                               upper_bound_=float('inf'), moves_ = 1000):
         """
         Generate an initial configuration that lies within an energy range.
         """
