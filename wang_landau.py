@@ -157,7 +157,7 @@ class wang_landau:
         # Wang-Landau Monte Carlo Algorithm.
         for i in xrange(1, self.wl_its):
             # Store previous system.
-            copy_system = copy.deepcopy(self.system.get_config())
+            copy_system = self.system.copy_config()
             # Generate a new system 
             self.system.generate_config()
             enew = self.system.get_energy()
@@ -182,23 +182,23 @@ class wang_landau:
                         accept += 1
                     else:
                         # If the move is rejected revert to original position of atom.
-                        self.system.copy_config(copy_system) 
+                        self.system.set_config(copy_system) 
                     # Update histogram in energy space recording final configuration.
                     self.histogram[level] += 1
                     self.dos[level] += self.lnf
                 else:
                     # If the move is rejected revert to original position of atom.
-                    self.system.copy_config(copy_system) 
+                    self.system.set_config(copy_system) 
             elif self.dimension == 2:
                 enew = [self.system.get_energy1(),self.system.get_energy2()]
-                print enew, self.e_max, self.e_min
+                #print enew, self.e_max, self.e_min
                 level = (elast - self.e_min)/self.spacing
                 level = [int(level[0]),int(level[1])]
-                print level
-                print elast
+                #print level
+                #print elast
                 if enew[0] < self.e_max[0] and enew[0] > self.e_min[0] and \
                 enew[1] < self.e_max[1] and enew[1] > self.e_min[1]:
-                    print enew, self.e_max, self.e_min
+                 #   print enew, self.e_max, self.e_min
                     if gen_rand() < \
                         np.exp(self.dos[level[0],level[1]]-self.dos[old_level[0],old_level[1]]):
                         # If the move is accepted update stored energy.
@@ -208,13 +208,13 @@ class wang_landau:
                         accept += 1
                     else:
                         # If the move is rejected revert to original position of atom.
-                        self.system.copy_config(copy_system) 
+                        self.system.set_config(copy_system) 
                     # Update histogram in energy space recording final configuration.
                     self.histogram[level[0],level[1]] += 1
                     self.dos[level[0],level[1]] += self.lnf
                 else:
                     # If the move is rejected revert to original position of atom.
-                    self.system.copy_config(copy_system) 
+                    self.system.set_config(copy_system) 
             # Check convergence
             
             if (i > 1./np.sqrt(self.lnf)*self.h_range*self.h_range) and (i % 100 == 0) and i > 0:

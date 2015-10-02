@@ -31,8 +31,10 @@ class path_integral_system:
     def set_config(self, ring_system_):
         self.ring_system = ring_system_
     
-    def copy_config(self, ring_system_):
-        self.ring_system = copy.deepcopy(ring_system_)
+    def copy_config(self):
+        copy_system = copy.deepcopy(self.ring_system)
+        return copy_system
+
 
     def generate_config(self):
         bead_move = int(np.random.random()*self.beads)
@@ -76,7 +78,7 @@ class path_integral_system:
         for i in range(self.beads):
             self.system.copy_config(self.ring_system[i])
             pot += self.system.get_energy()
-            print pot
+            #print pot
 
         return pot/self.beads
 
